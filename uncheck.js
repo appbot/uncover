@@ -15,4 +15,4 @@ const uncheck = ({ lines, functions, branches }) => {
   return result;
 };
 
-module.exports = { uncheck };
+module.exports = uncheck;

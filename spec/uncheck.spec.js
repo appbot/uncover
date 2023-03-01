@@ -1,4 +1,4 @@
-const { uncheck } = require("../uncheck");
+const uncheck = require("../uncheck");
 
 describe("uncheck", () => {
   set("lines", [null, 1, 3, 4, 0, null, 3]);
