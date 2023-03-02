@@ -1,0 +1,26 @@
+name: 🧹
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_ENV: test
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🧳 checkout
+        uses: actions/checkout@v3
+      - name: 🤓 node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: 🧶 yarn
+        run: yarn install --frozen-lockfile
+
+      - name: 🧹 eslint
+        run: yarn eslint

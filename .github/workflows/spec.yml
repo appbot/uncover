@@ -1,0 +1,45 @@
+name: 🧐
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        node: [14, 16, 18]
+        os: [ubuntu-latest, ubuntu-20.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    name: Spec against node ${{ matrix.node }} on ${{ matrix.os }}
+    steps:
+      - name: 🧳 checkout
+        uses: actions/checkout@v3
+      - name: 🤓 node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+      - name: 🧶 yarn
+        run: yarn install --frozen-lockfile
+      - name: 🧐 test
+        run: yarn test
+  coverage: # only run coverage once
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🧳 checkout
+        uses: actions/checkout@v3
+      - name: 🤓 node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: 🧶 yarn
+        run: yarn install --frozen-lockfile
+      - name: 🏖️ coverage
+        uses: paambaati/codeclimate-action@v3.2.0
+        env:
+          CC_TEST_REPORTER_ID: 73917c9a046e1c615ae936e0d70da466b79cf588e7a86384f7a208fc6b8b650b
+        with:
+          coverageCommand: yarn test:nyc
+          coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
