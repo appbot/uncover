@@ -12,7 +12,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "test": "NODE_ENV=test jsspec -r spec/spec_helper.js -- spec/**/*.spec.js",
+    "test": "jsspec -r spec/spec_helper.js -- spec/**/*.spec.js",
     "test:c8": "c8 -r lcov -r text yarn test",
     "test:nyc": "nyc -r lcov -r text yarn test",
     "prettier": "prettier "
