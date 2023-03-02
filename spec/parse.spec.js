@@ -1,4 +1,4 @@
-const parse = require("../parse");
+const parse = require("../lib/parse");
 
 describe("parse", () => {
   set(
