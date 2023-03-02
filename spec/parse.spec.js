@@ -1,8 +1,8 @@
-const parse = require("../lib/parse");
+const parse = require('../lib/parse');
 
-describe("parse", () => {
+describe('parse', () => {
   set(
-    "input",
+    'input',
     `TN:
      SF:file.js
      FN:1,method
@@ -21,46 +21,75 @@ describe("parse", () => {
      BRF:2
      BRH:1
      end_of_record`
-      .split("\n")
+      .split('\n')
       .map(l => l.trim())
   );
 
   subject(() => parse(input));
 
-  it("parses correctly", () =>
+  it('parses correctly', () =>
     expect(subject).to.deep.eql({
-      file: "file.js",
+      file: 'file.js',
       lines: [, 1, , , 3, 3, 3, 3],
-      functions: { names: ["method"], lines: [1], hits: [4] },
+      functions: { names: ['method'], lines: [1], hits: [4] },
       branches: [{ lines: [4, 5], hits: [3, 0] }],
     }));
 
-  context("when a function execution is missing", () => {
+  context('when a function execution is missing', () => {
     set(
-      "input",
+      'input',
       `TN:
-       SF:file.js
-       FN:1,method
-       FN:4,method2
-       FNF:1
-       FNH:1
-       FNDA:4,method2
-       DA:1,1
-       DA:4,3
-       LF:5
-       LH:5
-       BRF:0
-       BRH:0
-       end_of_record`
-        .split("\n")
+         SF:file.js
+         FN:1,method
+         FN:4,method2
+         FNF:1
+         FNH:1
+         FNDA:4,method2
+         DA:1,1
+         DA:4,3
+         LF:5
+         LH:5
+         BRF:0
+         BRH:0
+         end_of_record`
+        .split('\n')
         .map(l => l.trim())
     );
 
-    it("keeps the method associations correct", () =>
+    it('keeps the method associations correct', () =>
       expect(subject.functions).to.deep.eq({
-        names: ["method", "method2"],
+        names: ['method', 'method2'],
         lines: [1, 4],
         hits: [0, 4],
+      }));
+  });
+
+  context('when a function definition is missing', () => {
+    set(
+      'input',
+      `TN:
+         SF:file.js
+         FN:4,method2
+         FNF:1
+         FNH:1
+         FNDA:3,method
+         FNDA:4,method2
+         DA:1,1
+         DA:4,3
+         LF:5
+         LH:5
+         BRF:0
+         BRH:0
+         end_of_record`
+        .split('\n')
+        .map(l => l.trim())
+    );
+
+    it('keeps the method associations correct', () =>
+      expect(subject.functions).to.deep.eq({
+        names: ['method2', 'method'],
+        lines: [4, 0],
+        hits: [4, 3],
       }));
   });
 });
