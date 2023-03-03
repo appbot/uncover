@@ -35,3 +35,7 @@ These too would show positive line coverage, even when the method was never call
 For Ruby: Note that you will need to use the [umbrellio fork with the method coverage branch](https://github.com/umbrellio/simplecov/tree/add-method-coverage-support) to get method coverage until [PR#987](https://github.com/simplecov-ruby/simplecov/pull/987) is merged.
 
 As an example of the lies that line coverage provides. When we enabled this tool at [Appbot](https://appbot.co) or coverage on Code Climate dropped by about 4%. Now excuse me while I go squash some potential bugs 🐛.
+
+Here are before and after shots showing the coverage in the gutter on VSCode. Branch coverage can be seen in the before shot, but this will show as fully covered in some tools, as the method coverage is here.
+
+![before](doc/before.png) ![after](doc/after.png)
