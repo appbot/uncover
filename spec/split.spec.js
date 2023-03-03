@@ -17,7 +17,7 @@ end_of_record
 
   it('splits on `end_of_record` with trimming', () =>
     expect(subject).to.eql([
-      'body of\nfile coverage 1',
-      'body of file coverage 2',
+      ['body of', 'file coverage 1'],
+      ['body of file coverage 2'],
     ]));
 });
