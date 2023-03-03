@@ -41,5 +41,5 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: 73917c9a046e1c615ae936e0d70da466b79cf588e7a86384f7a208fc6b8b650b
         with:
-          coverageCommand: yarn test:nyc
-          coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
+          coverageCommand: script/cover
+          coverageLocations: ${{github.workspace}}/coverage/lcov-uncovered.info:lcov

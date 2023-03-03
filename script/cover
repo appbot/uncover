@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# run from project root
+
+yarn test:nyc
+node index.js coverage/lcov.info > coverage/lcov-uncovered.info
