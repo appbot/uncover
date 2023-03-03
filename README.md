@@ -1,4 +1,4 @@
-# @appbot/uncover
+# @appbot.co/uncover
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/ab59d137b487363080eb/maintainability)](https://codeclimate.com/repos/6400001854e316009d001dd2/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/ab59d137b487363080eb/test_coverage)](https://codeclimate.com/repos/6400001854e316009d001dd2/test_coverage)
 

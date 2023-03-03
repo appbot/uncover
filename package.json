@@ -1,5 +1,5 @@
 {
-  "name": "@appbot/uncover",
+  "name": "@appbot.co/uncover",
   "version": "0.1.0",
   "description": "Clear line coverage for partially covered branches",
   "main": "index.js",
