@@ -5,7 +5,7 @@ describe('serialize', () => {
 
   set('input', () => ({
     file: 'file.js',
-    lines: [, 1, , , 3, 3, 0, 3],
+    lines,
     functions,
     branches: [{ lines: [4, 5], hits: [3, 0] }],
   }));
@@ -15,6 +15,8 @@ describe('serialize', () => {
     lines: [1, 4],
     hits: [4, 0],
   });
+
+  set('lines', [, 1, , , 3, 3, 0, 3]);
 
   it('serializes correctly', () =>
     expect(subject).to.deep.eql(
@@ -37,9 +39,14 @@ DA:6,0
 DA:7,3
 LF:5
 LH:4
-end_of_record
-`
+end_of_record`
     ));
+
+  context('when there are no lines', () => {
+    set('lines', []);
+
+    it('gives nothing', () => expect(subject).to.have.length(0));
+  });
 
   context('when a function has no line ref', () => {
     set('functions', {
