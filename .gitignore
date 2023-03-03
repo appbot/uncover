@@ -19,3 +19,6 @@ node_modules/
 
 # Yarn Integrity file
 .yarn-integrity
+
+# junk from macOS
+.DS_Store
