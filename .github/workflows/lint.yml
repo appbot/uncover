@@ -22,5 +22,5 @@ jobs:
       - name: 🧶 yarn
         run: yarn install --frozen-lockfile
 
-      - name: 🧹 eslint
-        run: yarn eslint
+      - name: 🎀 prettier
+        run: yarn lint
