@@ -19,10 +19,13 @@
     "lint": "prettier lib spec index.js --check"
   },
   "devDependencies": {
+    "@types/sinon-chai": "3.2.9",
     "@jsspec/jsspec": "^0.3.1",
     "c8": "^7.13.0",
     "chai": "^4.3.7",
     "nyc": "^15.1.0",
-    "prettier": "^2.8.4"
+    "prettier": "^2.8.4",
+    "sinon": "^15.0.2",
+    "sinon-chai": "^3.7.0"
   }
 }
