@@ -24,6 +24,11 @@ files.forEach(name => {
 results.forEach(coverage => {
   const info = coverage.uncover().serialise();
   if (info.length) console.log(info);
+  if (coverage.errors.length) {
+    process.exitCode = -1;
+    console.error(`Failed to process '${coverage.name}':`);
+    console.error('  ' + coverage.errors.join('\n  '));
+  }
 });
 
 if (failures.length) {
