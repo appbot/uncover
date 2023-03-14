@@ -124,7 +124,7 @@ describe('parse', () => {
 
     it('goes 💥', () =>
       expect(() => subject).to.throw(
-        'function coverage present without function line attribute'
+        'function coverage present without function line attribute: 3,method'
       ));
   });
 });
