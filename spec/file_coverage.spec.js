@@ -200,6 +200,12 @@ end_of_record`);
 
         it('returns an empty string', () => expect(info).to.eq(''));
       });
+
+      context('when there is an error', () => {
+        beforeEach(() => coverage.errors.push('bummer'));
+
+        it('returns an empty string', () => expect(info).to.eq(''));
+      });
     });
   });
 
