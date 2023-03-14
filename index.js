@@ -1,31 +1,29 @@
 #!/usr/bin/env node
 const fs = require('fs');
+const Coverage = require('./lib/coverage');
 const parse = require('./lib/parse');
-const serialize = require('./lib/serialize');
 const split = require('./lib/split');
-const uncheck = require('./lib/uncheck');
 
 const files = process.argv.slice(2);
+
 const failures = [];
+const results = new Coverage();
+
 files.forEach(name => {
   let file;
   try {
     file = fs.readFileSync(name, { encoding: 'utf-8' });
+    if (!file) return;
+
+    split(file).forEach(part => parse(results, part));
   } catch (e) {
     failures.push(`Failed to process '${name}'. ${e.message}`);
   }
-  if (!file) return;
+});
 
-  console.log(
-    split(file)
-      .map(part => {
-        const parsed = parse(part);
-        parsed.lines = uncheck(parsed);
-        return serialize(parsed);
-      })
-      .filter(f => f)
-      .join('\n')
-  );
+results.forEach(coverage => {
+  const info = coverage.uncover().serialise();
+  if (info.length) console.log(info);
 });
 
 if (failures.length) {
