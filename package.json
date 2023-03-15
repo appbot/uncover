@@ -1,6 +1,6 @@
 {
   "name": "@appbot.co/uncover",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Clear line coverage for partially covered branches",
   "main": "index.js",
   "bin": "index.js",
@@ -10,6 +10,9 @@
     "index.js",
     "lib/*"
   ],
+  "engines": {
+    "node": ">=12.0.0"
+  },
   "license": "MIT",
   "private": false,
   "scripts": {
@@ -19,10 +22,13 @@
     "lint": "prettier lib spec index.js --check"
   },
   "devDependencies": {
+    "@types/sinon-chai": "3.2.9",
     "@jsspec/jsspec": "^0.3.1",
     "c8": "^7.13.0",
     "chai": "^4.3.7",
     "nyc": "^15.1.0",
-    "prettier": "^2.8.4"
+    "prettier": "^2.8.4",
+    "sinon": "^15.0.2",
+    "sinon-chai": "^3.7.0"
   }
 }

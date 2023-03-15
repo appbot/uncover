@@ -1,3 +1,5 @@
+const sinon = require('sinon');
+const FileCoverage = require('../lib/file_coverage');
 const parse = require('../lib/parse');
 
 describe('parse', () => {
@@ -25,15 +27,42 @@ describe('parse', () => {
       .map(l => l.trim())
   );
 
-  subject(() => parse(input));
+  subject(() => parse(coverage, input));
 
-  it('parses correctly', () =>
-    expect(subject).to.deep.eql({
-      file: 'file.js',
-      lines: [, 1, , , 3, 3, 3, 3],
-      functions: { names: ['method'], lines: [1], hits: [4] },
-      branches: [{ lines: [4, 5], hits: [3, 0] }],
-    }));
+  set('coverage', () => ({ get: sinon.fake.returns(fileCover) }));
+  set('fileCover', () => sinon.createStubInstance(FileCoverage));
+
+  it('parses correctly', () => {
+    subject;
+
+    expect(coverage.get).to.have.been.calledOnceWith('file.js');
+    expect(fileCover.addLine).to.have.been.calledWith({ line: 1, hits: 1 });
+    expect(fileCover.addLine).to.have.been.calledWith({ line: 4, hits: 3 });
+    expect(fileCover.addLine).to.have.been.calledWith({ line: 5, hits: 3 });
+    expect(fileCover.addLine).to.have.been.calledWith({ line: 6, hits: 3 });
+    expect(fileCover.addLine).to.have.been.calledWith({ line: 7, hits: 3 });
+    expect(fileCover.addLine).to.have.callCount(5);
+
+    expect(fileCover.addFunction).to.have.been.calledOnceWith({
+      name: 'method',
+      line: 1,
+      hits: 4,
+    });
+
+    expect(fileCover.addBranch).to.have.been.calledWith({
+      line: 4,
+      block: 1,
+      branch: 0,
+      hits: 3,
+    });
+    expect(fileCover.addBranch).to.have.been.calledWith({
+      line: 5,
+      block: 1,
+      branch: 1,
+      hits: 0,
+    });
+    expect(fileCover.addBranch).to.have.been.calledTwice;
+  });
 
   context('when a function execution is missing', () => {
     set(
@@ -56,12 +85,20 @@ describe('parse', () => {
         .map(l => l.trim())
     );
 
-    it('keeps the method associations correct', () =>
-      expect(subject.functions).to.deep.eq({
-        names: ['method', 'method2'],
-        lines: [1, 4],
-        hits: [0, 4],
-      }));
+    it('keeps the method associations correct', () => {
+      subject;
+
+      expect(fileCover.addFunction).to.have.been.calledWith({
+        name: 'method2',
+        line: 4,
+        hits: 4,
+      });
+      expect(fileCover.addFunction).to.have.been.calledWith({
+        name: 'method',
+        line: 1,
+        hits: 0,
+      });
+    });
   });
 
   context('when a function definition is missing', () => {
@@ -85,11 +122,9 @@ describe('parse', () => {
         .map(l => l.trim())
     );
 
-    it('keeps the method associations correct', () =>
-      expect(subject.functions).to.deep.eq({
-        names: ['method2', 'method'],
-        lines: [4, 0],
-        hits: [4, 3],
-      }));
+    it('goes 💥', () =>
+      expect(() => subject).to.throw(
+        'function coverage present without function line attribute: 3,method'
+      ));
   });
 });
