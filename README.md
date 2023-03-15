@@ -70,7 +70,7 @@ Here are before and after shots showing the coverage in the gutter on VSCode. Br
 
 ![before](doc/before.png) ![after](doc/after.png)
 
-As an example of the lies that line coverage provides. When we enabled this tool at [Appbot](https://appbot.co) or coverage on Code Climate dropped by about 4%. Now excuse me while I go squash some potential bugs 🐛.
+As an example of the lies that line coverage provides. When we enabled this tool at [Appbot](https://appbot.co) our coverage on Code Climate dropped by about 4%. Now excuse me while I go squash some potential bugs 🐛.
 
 ## Merging
 
