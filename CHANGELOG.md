@@ -1,5 +1,9 @@
 # Change log
 
+## 0.2.2
+
+- Order output
+
 ## 0.2.1
 
 - Readme only change

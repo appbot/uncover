@@ -10,6 +10,16 @@ This tool allow you to take your valid LCOV files, with the useful branch and fu
 
 ## Usage
 
+### Install
+
+```bash
+npm i @appbot.co/uncover
+# or
+yarn add @appbot.co/uncover
+```
+
+### Run
+
 For a single coverage file
 
 ```bash

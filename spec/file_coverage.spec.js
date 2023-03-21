@@ -24,30 +24,30 @@ describe('FileCoverage', () => {
 
     describe('#addBranch', () => {
       subject('branches', () => coverage.branches);
-      set('branch0', () => branches.get(0));
+      set('branch1', () => branches.get(1));
 
       beforeEach(() =>
-        coverage.addBranch({ line: 4, block: 0, branch: 3, hits: 2 })
+        coverage.addBranch({ line: 4, block: 1, branch: 3, hits: 2 })
       );
 
       it('adds the branch in full', () => {
-        expect(branch0).to.be.an('Array');
-        expect(branch0[3]).to.deep.eq({ line: 4, hits: 2 });
+        expect(branch1).to.be.an('Array');
+        expect(branch1[3]).to.deep.eq({ line: 4, hits: 2 });
       });
 
       it('adds additional related branches', () => {
-        coverage.addBranch({ line: 4, block: 0, branch: 1, hits: 0 });
+        coverage.addBranch({ line: 4, block: 1, branch: 1, hits: 0 });
 
-        expect(branch0).to.be.an('Array');
-        expect(branch0[3]).to.deep.eq({ line: 4, hits: 2 });
-        expect(branch0[1]).to.deep.eq({ line: 4, hits: 0 });
+        expect(branch1).to.be.an('Array');
+        expect(branch1[3]).to.deep.eq({ line: 4, hits: 2 });
+        expect(branch1[1]).to.deep.eq({ line: 4, hits: 0 });
       });
 
       it('adds additional unrelated branches', () => {
         coverage.addBranch({ line: 9, block: 2, branch: 1, hits: 0 });
 
-        expect(branch0).to.be.an('Array');
-        expect(branch0[3]).to.deep.eq({ line: 4, hits: 2 });
+        expect(branch1).to.be.an('Array');
+        expect(branch1[3]).to.deep.eq({ line: 4, hits: 2 });
         expect(branches.get(2)[1]).to.deep.eq({ line: 9, hits: 0 });
       });
     });
@@ -84,7 +84,7 @@ describe('FileCoverage', () => {
       coverage.addLine({ line, hits: lineHits });
       coverage.addBranch({
         line,
-        block: 0,
+        block: 1,
         branch: 3,
         hits: branchHits,
       });
@@ -102,21 +102,21 @@ describe('FileCoverage', () => {
 
     describe('#addBranch', () => {
       subject('branches', () => coverage.branches);
-      set('branch0', () => branches.get(0));
+      set('branch1', () => branches.get(1));
 
       beforeEach(() =>
-        coverage.addBranch({ line: line + os, block: 0, branch: 3, hits: 2 })
+        coverage.addBranch({ line: line + os, block: 1, branch: 3, hits: 2 })
       );
 
       it('sums branch coverage', () =>
-        expect(branch0[3]).to.deep.eq({ line, hits: 2 + branchHits }));
+        expect(branch1[3]).to.deep.eq({ line, hits: 2 + branchHits }));
 
       context('when same branch references different lines', () => {
         set('os', 1);
 
         it('sets an error', () =>
           expect(coverage.errors[0]).to.eq(
-            'branch 3 of block 0 has varying definition lines in test.js'
+            'branch 3 of block 1 has varying definition lines in test.js'
           ));
       });
     });
@@ -146,29 +146,37 @@ describe('FileCoverage', () => {
       beforeEach(() => {
         coverage.addLine({ line, hits: lineHits });
         coverage.addLine({ line: line + 1, hits: lineHits });
-        coverage.addBranch({ line, block: 0, branch: 0, hits: 0 });
+        coverage.addBranch({ line, block: 1, branch: 0, hits: 0 });
         coverage.addFunction({ name: 'myFunc2', line: line + 1, hits: 0 });
+        // out of order adding
+        coverage.addLine({ line: line - 2, hits: 3 });
+        coverage.addFunction({ name: 'firstFunc', line: line - 1, hits: 2 });
+        coverage.addBranch({ line: line + 1, block: 0, branch: 0, hits: 1 });
       });
 
       subject('info', () => coverage.serialise());
 
-      it('produces a correct lcov part', () =>
+      it('produces a correct, ordered lcov part', () =>
         expect(info).to.eq(`TN:
 SF:test.js
+FN:2,firstFunc
 FN:3,myFunc
 FN:4,myFunc2
+FNDA:2,firstFunc
 FNDA:9,myFunc
 FNDA:0,myFunc2
-FNF:2
-FNH:1
-BRDA:3,0,0,0
-BRDA:3,0,3,11
-BRF:4
-BRH:1
+FNF:3
+FNH:2
+BRDA:4,0,0,1
+BRDA:3,1,0,0
+BRDA:3,1,3,11
+BRF:5
+BRH:2
+DA:1,3
 DA:3,2
 DA:4,1
-LF:2
-LH:2
+LF:3
+LH:3
 end_of_record`));
 
       context('after uncover', () => {
@@ -177,20 +185,24 @@ end_of_record`));
 
           expect(info).to.eq(`TN:
 SF:test.js
+FN:2,firstFunc
 FN:3,myFunc
 FN:4,myFunc2
+FNDA:2,firstFunc
 FNDA:9,myFunc
 FNDA:0,myFunc2
-FNF:2
-FNH:1
-BRDA:3,0,0,0
-BRDA:3,0,3,11
-BRF:4
-BRH:1
+FNF:3
+FNH:2
+BRDA:4,0,0,1
+BRDA:3,1,0,0
+BRDA:3,1,3,11
+BRF:5
+BRH:2
+DA:1,3
 DA:3,0
 DA:4,0
-LF:2
-LH:0
+LF:3
+LH:1
 end_of_record`);
         });
       });
@@ -216,8 +228,8 @@ end_of_record`);
       coverage.addLine({ line: 1, hits: 2 });
       coverage.addLine({ line: 2, hits: 2 });
       coverage.addLine({ line: 3, hits: 2 });
-      coverage.addBranch({ line: 1, block: 0, branch: 3, hits: 0 });
-      coverage.addBranch({ line: 3, block: 0, branch: 0, hits: 1 });
+      coverage.addBranch({ line: 1, block: 1, branch: 3, hits: 0 });
+      coverage.addBranch({ line: 3, block: 1, branch: 0, hits: 1 });
       coverage.addFunction({ name: 'myFunc', line: 2, hits: 0 });
       coverage.addFunction({ name: 'yourFunc', line: 3, hits: 1 });
     });
